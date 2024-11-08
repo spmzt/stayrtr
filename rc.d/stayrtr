@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+
+# PROVIDE: stayrtr
+# REQUIRE: NETWORKING
+# KEYWORD: shutdown
+#
+# Add the following lines to /etc/rc.conf to enable `stayrtr':
+#
+# stayrtr_enable="YES"
+# stayrtr_flags="<set as needed>"
+
+. /etc/rc.subr
+
+name="stayrtr"
+rcvar=stayrtr_enable
+
+# read configuration and set defaults
+load_rc_config "$name"
+: ${stayrtr_enable="NO"}
+: ${stayrtr_flags:="-bind :8292 -cache /var/db/rpki-client/json"}
+
+pidfile="/var/run/${name}.pid"
+logfile="/var/log/${name}.log"
+
+command="/usr/local/bin/${name}"
+command_args="${stayrtr_flags}"
+
+run_rc_command "$1"
